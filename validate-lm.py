@@ -20,8 +20,6 @@ import torch.optim as optim
 import torch.nn.functional as F
 import transformers
 
-import utils
-
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # transformers.logger.setLevel(logging.ERROR)
 transformers.logging.set_verbosity_error()
