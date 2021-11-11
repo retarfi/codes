@@ -120,6 +120,8 @@ def main(path:str, path_vocab:str, max_length:int, neologd:bool, layers:int) -> 
             config = transformers.ElectraConfig.from_pretrained(path)
             config.num_labels = num_labels
             net = transformers.ElectraForSequenceClassification.from_pretrained(path, config=config)
+        else:
+            raise ValueError('path must contain bert or electra')
         net = net.to(device)
         if 'bert' in path:
             # 一旦全部のパラメータのrequires_gradをFalseで更新
