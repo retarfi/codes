@@ -68,18 +68,21 @@ def main(path:str, path_vocab:str, max_length:int, neologd:bool, layers:int) -> 
     arr_text, arr_label, num_labels = make_dataset()
     global TOKENIZER
     if path_vocab != '':
-        logger.debug(f'vocab path: {path_vocab}')
-        TOKENIZER = transformers.BertJapaneseTokenizer(
-            path_vocab,
-            do_lower_case = False,
-            word_tokenizer_type = "mecab",
-            subword_tokenizer_type = "wordpiece",
-            tokenize_chinese_chars = False,
-            # mecab_kwargs = {'mecab_dic': mecab_dic_type}
-        )
-    elif neologd:
-        logger.debug(f'vocab path: {path_vocab} (with neologd)')
-        TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path, mecab_kwargs={"mecab_option": "-d /home/b2019msuzuki/local/lib/mecab/dic/mecab-ipadic-neologd"})
+        if os.path.isfile(path_vocab) and not neologd:
+            logger.debug(f'vocab path: {path_vocab}')
+            TOKENIZER = transformers.BertJapaneseTokenizer(
+                path_vocab,
+                do_lower_case = False,
+                word_tokenizer_type = "mecab",
+                subword_tokenizer_type = "wordpiece",
+                tokenize_chinese_chars = False,
+                # mecab_kwargs = {'mecab_dic': mecab_dic_type}
+            )
+        elif neologd:
+            logger.debug(f'vocab path: {path_vocab} (with neologd)')
+            TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path, mecab_kwargs={"mecab_option": "-d /home/b2019msuzuki/local/lib/mecab/dic/mecab-ipadic-neologd"})
+        else:
+            TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path_vocab)
     else:
         TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path)
     with mp.Pool(os.cpu_count()) as pool: #tokenize
