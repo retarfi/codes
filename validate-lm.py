@@ -84,7 +84,11 @@ def main(path:str, path_vocab:str, max_length:int, neologd:bool, layers:int) -> 
         else:
             TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path_vocab)
     else:
-        TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path)
+        if not 'ginza' in path:
+            TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path)
+        else:
+            from sudachitra import ElectraSudachipyTokenizer
+            TOKENIZER = ElectraSudachipyTokenizer.from_pretrained(path)
     with mp.Pool(os.cpu_count()) as pool: #tokenize
         mp_task = [pool.apply_async(mp_tokenize, (text, max_length)) for text in arr_text]
         tokens = np.array([f.get() for f in mp_task])
