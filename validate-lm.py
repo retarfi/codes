@@ -84,7 +84,7 @@ def main(path:str, path_vocab:str, max_length:int, neologd:bool, layers:int) -> 
         else:
             TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path_vocab)
     else:
-        if not 'ginza' in path:
+        if not 'megagonlabs/transformers-ud-japanese-electra' in path:
             TOKENIZER = transformers.BertJapaneseTokenizer.from_pretrained(path)
         else:
             from sudachitra import ElectraSudachipyTokenizer
